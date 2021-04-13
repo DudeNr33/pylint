@@ -216,7 +216,7 @@ jobs:
           . venv/bin/activate
           pytest --benchmark-disable --cov --cov-report= tests/
       - name: Upload coverage artifact
-        uses: actions/upload-artifact@v2.2.2
+        uses: actions/upload-artifact@v2.2.3
         with:
           name: coverage-${{ matrix.python-version }}
           path: .coverage
@@ -252,7 +252,7 @@ jobs:
           echo "Failed to restore Python venv from cache"
           exit 1
       - name: Download all coverage artifacts
-        uses: actions/download-artifact@v2.0.8
+        uses: actions/download-artifact@v2.0.9
       - name: Combine coverage results
         run: |
           . venv/bin/activate
@@ -309,7 +309,7 @@ jobs:
         run: >-
           echo "::set-output name=datetime::"$(date "+%Y%m%d_%H%M")
       - name: Upload benchmark artifact
-        uses: actions/upload-artifact@v2.2.2
+        uses: actions/upload-artifact@v2.2.3
         with:
           name:
             benchmark-${{ runner.os }}-${{ matrix.python-version }}_${{
