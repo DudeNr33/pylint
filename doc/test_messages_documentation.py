@@ -53,6 +53,12 @@ class LintModuleTest:
         self._linter.config.persistent = 0
         checkers.initialize(self._linter)
 
+        # See if test has its own .rc file, if so we use that one
+        if (test_file[1].parent / "pylintrc").exists():
+            rc_file = test_file[1].parent / "pylintrc"
+        else:
+            rc_file = None
+
         _config_initialization(
             self._linter,
             args_list=[
@@ -60,6 +66,7 @@ class LintModuleTest:
                 "--disable=all",
                 f"--enable={test_file[0]}",
             ],
+            config_file=rc_file,
             reporter=_test_reporter,
         )
 
