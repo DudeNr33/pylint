@@ -69,6 +69,7 @@ class PyreverseConfig(
 class TestFileOptions(TypedDict):
     output_formats: list[str]
     command_line_args: list[str]
+    pythonpath: str | None
 
 
 class FunctionalPyreverseTestfile(NamedTuple):
@@ -95,7 +96,11 @@ def get_functional_test_files(
             test_files.append(
                 FunctionalPyreverseTestfile(
                     source=path,
-                    options={"output_formats": ["mmd"], "command_line_args": []},
+                    options={
+                        "output_formats": ["mmd"],
+                        "command_line_args": [],
+                        "pythonpath": None,
+                    },
                 )
             )
     return test_files
@@ -104,6 +109,12 @@ def get_functional_test_files(
 def _read_config(config_file: Path) -> TestFileOptions:
     config = configparser.ConfigParser()
     config.read(str(config_file))
+    pythonpath_option = config.get("testoptions", "pythonpath", fallback=None)
+    pythonpath = (
+        str(Path(config_file.parent).joinpath(pythonpath_option).resolve())
+        if pythonpath_option
+        else None
+    )
     return {
         "output_formats": config.get(
             "testoptions", "output_formats", fallback="mmd"
@@ -111,4 +122,5 @@ def _read_config(config_file: Path) -> TestFileOptions:
         "command_line_args": shlex.split(
             config.get("testoptions", "command_line_args", fallback="")
         ),
+        "pythonpath": pythonpath,
     }

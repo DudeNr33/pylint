@@ -2,6 +2,7 @@
 # For details: https://github.com/PyCQA/pylint/blob/main/LICENSE
 # Copyright (c) https://github.com/PyCQA/pylint/blob/main/CONTRIBUTORS.txt
 
+import sys
 from pathlib import Path
 
 import pytest
@@ -26,6 +27,8 @@ CLASS_DIAGRAM_TEST_IDS = [testfile.source.stem for testfile in CLASS_DIAGRAM_TES
 def test_class_diagrams(
     testfile: FunctionalPyreverseTestfile, tmpdir: LocalPath
 ) -> None:
+    if testfile.options["pythonpath"]:
+        sys.path.insert(0, testfile.options["pythonpath"])
     input_file = testfile.source
     for output_format in testfile.options["output_formats"]:
         with pytest.raises(SystemExit) as sys_exit:
